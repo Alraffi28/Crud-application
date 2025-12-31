@@ -1,0 +1,137 @@
+import { useState } from 'react'
+import './App.css'
+import { useEffect } from 'react';
+import axios from 'axios'
+
+function App() {
+  const[data , setData] = useState([]);
+  const[refresh , setRefresh] = useState(false);
+  const[edit , setEdit] = useState("");
+  const[box , setBox] = useState(false)
+  const[form , setForm] = useState({
+    name : '', subject : '',
+    grade : ''
+  })
+
+  useEffect(()=> {
+    // addUser(),
+    getUser()
+  },[refresh])
+
+  function handleChange (e){
+    setForm({...form , [e.target.name] : e.target.value})
+  }
+
+  async function addUser() {
+    try{
+      const req = await axios.post('http://localhost:5000/api/student' ,form)
+      alert("New User Added")
+      setRefresh(!refresh)
+      setForm({name : "" , subject : "" , grade : ""})
+    }
+    catch(error){
+      console.log(error);
+    }
+  }
+  async function getUser(){
+    const res = await axios.get('http://localhost:5000/api/get')
+    setData(res.data.data)
+  }
+  function handleEdit(val){
+    setForm({
+      name : val.name,
+      subject : val.subject,
+      grade : val.grade
+    })
+    setEdit(val._id)
+    setBox(!box)
+  }
+  async function editUser() {
+    try{
+      let res = await axios.put(`http://localhost:5000/api/edit/${edit}` , form)
+      setForm({name : "" , subject : "" , grade : ""})
+      setRefresh(!refresh)
+      setBox(!box)
+    }
+    catch(err){
+      console.log(err);
+    }
+  }
+  async function deleteUser(id){
+    try{
+      const res = await axios.delete(`http://localhost:5000/api/del/${id}`)
+      setRefresh(!refresh)
+    }catch(err){
+      console.log(err);
+    }
+  }
+  async function cancelBtn(){
+    setRefresh(!refresh)
+    setBox(!box)
+    setForm({name : "" , subject : "" , grade : ""})
+  }
+  return (
+    <>
+    <div className="container">
+      <h2>Students Record Management</h2>
+      <div className="input-group">
+        <input type="text" name='name' value={form.name} onChange={handleChange} placeholder=' Enter Your Name'/>
+        <input type="text" name='subject' value={form.subject} onChange={handleChange} placeholder=' Enter Your subject'/>
+        <input type="text" name='grade' value={form.grade} onChange={handleChange} placeholder=' Enter Your grade'/>
+          <button className='add-btn' onClick={addUser}>Add</button>
+      </div>
+    {/* {
+        edit=== ""? <button onClick={()=>addUser()}>Add</button>
+        : ""
+      } */}
+      <table>
+        <thead>
+        <tr>
+        <th>Name</th>
+        <th>Subject</th>
+        <th>Grade</th>
+        <th>action</th>
+        </tr>
+        </thead>
+
+        <tbody>
+      {
+        data.map((val)=>{
+          return( <tr key={val._id}>
+            <td>{val.name}</td>
+            <td>{val.subject}</td>
+            <td>{val.grade}</td>
+            <td>
+              <button className='btn-edit' onClick={()=>handleEdit(val)}>edit</button>
+              <button className='btn-edit' onClick={()=>deleteUser(val._id)}>X</button>
+            </td>
+          </tr>
+          )
+        })
+      }
+      </tbody>
+      </table>
+      {
+        box && (
+          <div className="modal-overlay">
+            <div className="edit-box">
+            <h2>Edit Student Details</h2>
+            <div className='input-group'>
+              <input type="text" name='name' value={form.name} onChange={handleChange} placeholder=' Enter Your Name'/>
+              <input type="text" name='subject' value={form.subject} onChange={handleChange} placeholder=' Enter Your subject'/>
+              <input type="text" name='grade' value={form.grade} onChange={handleChange} placeholder=' Enter Your grade'/>
+            </div>
+            <div className='btns'>
+              <button className='add-btn' onClick={() =>editUser()}>Edit</button>
+              <button className='btn-cancel' onClick={()=>cancelBtn()}>Cancel</button>
+            </div>  
+          </div>
+          </div>
+        )
+      }
+      </div>
+    </>
+  )
+}
+
+export default App
