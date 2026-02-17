@@ -3,6 +3,7 @@ import './App.css'
 import { useEffect } from 'react';
 import axios from 'axios'
 
+const API_URL = "https://crud-application-backend-q8kt.onrender.com/api";
 function App() {
   const[data , setData] = useState([]);
   const[refresh , setRefresh] = useState(false);
@@ -24,7 +25,7 @@ function App() {
 
   async function addUser() {
     try{
-      const req = await axios.post('http://localhost:5000/api/student' ,form)
+      const req = await axios.post(`${API_URL}/student` ,form)
       alert("New User Added")
       setRefresh(!refresh)
       setForm({name : "" , subject : "" , grade : ""})
@@ -34,7 +35,7 @@ function App() {
     }
   }
   async function getUser(){
-    const res = await axios.get('http://localhost:5000/api/get')
+    const res = await axios.get(`${API_URL}/get`)
     setData(res.data.data)
   }
   function handleEdit(val){
@@ -48,7 +49,7 @@ function App() {
   }
   async function editUser() {
     try{
-      let res = await axios.put(`http://localhost:5000/api/edit/${edit}` , form)
+      let res = await axios.put(`${API_URL}/edit/${edit}` , form)
       setForm({name : "" , subject : "" , grade : ""})
       setRefresh(!refresh)
       setBox(!box)
@@ -59,7 +60,7 @@ function App() {
   }
   async function deleteUser(id){
     try{
-      const res = await axios.delete(`http://localhost:5000/api/del/${id}`)
+      const res = await axios.delete(`${API_URL}/del/${id}`)
       setRefresh(!refresh)
     }catch(err){
       console.log(err);
