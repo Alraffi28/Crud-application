@@ -9,6 +9,7 @@ function App() {
   const[refresh , setRefresh] = useState(false);
   const[edit , setEdit] = useState("");
   const[box , setBox] = useState(false)
+  const[error , setError] = useState("")
   const[form , setForm] = useState({
     name : '', subject : '',
     grade : ''
@@ -22,8 +23,12 @@ function App() {
   function handleChange (e){
     setForm({...form , [e.target.name] : e.target.value})
   }
-
   async function addUser() {
+    setError("")
+    if(!form.name && !form.subject && !form.grade){
+      setError("All fields are required")
+      return;
+    }
     try{
       const req = await axios.post(`${API_URL}/student` ,form)
       alert("New User Added")
@@ -81,6 +86,7 @@ function App() {
         <input type="text" name='grade' value={form.grade} onChange={handleChange} placeholder=' Enter Your grade'/>
           <button className='add-btn' onClick={addUser}>Add</button>
       </div>
+      {error && <p style={{ color: "red", fontWeight: "bold" }}>{error}</p>}
     {/* {
         edit=== ""? <button onClick={()=>addUser()}>Add</button>
         : ""
