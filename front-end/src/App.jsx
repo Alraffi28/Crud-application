@@ -29,6 +29,18 @@ function App() {
       setError("All fields are required")
       return;
     }
+    if(!form.name){
+      setError("Name is required")
+      return;
+    }
+    if(!form.subject){
+      setError("Subject is required")
+      return;
+    }
+    if(!form.grade){
+      setError("Grade is required")
+      return;
+    }
     try{
       const req = await axios.post(`${API_URL}/student` ,form)
       alert("New User Added")
@@ -64,6 +76,10 @@ function App() {
     }
   }
   async function deleteUser(id){
+    const isConfirm = window.confirm("Do you want to delete this student record?")
+    if(!isConfirm){
+      return;
+    }
     try{
       const res = await axios.delete(`${API_URL}/del/${id}`)
       setRefresh(!refresh)
