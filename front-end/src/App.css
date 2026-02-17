@@ -74,7 +74,8 @@ table {
 }
 th, td {
   padding: 15px;
-  text-align: left;
+  text-align: center;
+  vertical-align: middle;
   border-bottom: 1px solid #eee;
 }
 th {
@@ -158,6 +159,8 @@ tr:hover {
   }
 
   .btn-edit {
-    margin: 2px 0;
+    padding: 5px;
+    width: fit-content;
+    gap: 5px;
   }
 }
