@@ -125,8 +125,8 @@ function App() {
             <td>{val.subject}</td>
             <td>{val.grade}</td>
             <td>
-              <button className='btn-edit' onClick={()=>handleEdit(val)}>edit</button>
-              <button className='btn-edit' onClick={()=>deleteUser(val._id)}>X</button>
+              <button className='btn-edit' onClick={()=>handleEdit(val)}>Edit</button>
+              <button className='btn-edit' onClick={()=>deleteUser(val._id)}>Delete</button>
             </td>
           </tr>
           )
